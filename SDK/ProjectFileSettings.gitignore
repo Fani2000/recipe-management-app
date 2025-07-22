@@ -1,0 +1,165 @@
+# .NET Core
+bin/
+obj/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+.vs/
+.vscode/
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+.idea/
+*.sln.iml
+*.swp
+*.*~
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+publish/
+wwwroot/dist/
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NuGet Packages
+*.nupkg
+# NuGet Symbol Packages
+*.snupkg
+# The packages folder can be ignored because of Package Restore
+**/[Pp]ackages/*
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/[Pp]ackages/repositories.config
+# NuGet v3's project.json files produces more ignorable files
+*.nuget.props
+*.nuget.targets
+
+# Node.js / Vue.js
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+.yarn-integrity
+.pnpm-store/
+.pnpm-debug.log
+
+# Vue specific
+.DS_Store
+dist/
+dist-ssr/
+coverage/
+.env
+.env.local
+.env.*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vue CLI
+.cache/
+.temp/
+.output/
+
+# Database files
+*.mdf
+*.ldf
+*.ndf
+
+# Local development settings
+appsettings.Development.json
+appsettings.Local.json
+*.Development.json
+*.Local.json
+launchSettings.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Docker
+docker-compose.override.yml
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*~
+
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux specific
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Visual Studio for Mac
+.vscode/
+.idea/
+*.sln.iml
+
+# Rider
+.idea/
+*.sln.iml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/shelf/
+.idea/httpRequests/
+
+# User-specific files
+.DS_Store
+Thumbs.db
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Aspire artifacts
+.aspire/

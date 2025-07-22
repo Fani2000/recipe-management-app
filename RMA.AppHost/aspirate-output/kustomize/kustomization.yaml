@@ -1,0 +1,12 @@
+namespace: test-lab-fani
+
+resources:
+- cache
+- apiservice
+- namespace.yaml
+- dashboard.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+
