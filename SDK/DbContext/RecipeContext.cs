@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SDK.Models;
 
-namespace SDK.RecipesDbContext;
+namespace SDK.RecipesContext;
 
 public class RecipesDbContext : DbContext
 {

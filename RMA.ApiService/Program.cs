@@ -1,13 +1,9 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SDK.Data;
-using SDK.RecipesDbContext;
-using System;
-using System.IO;
 using System.Reflection;
+using System.Text.Json.Serialization;
+using SDK.RecipesContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +12,21 @@ builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddProblemDetails();
-builder.Services.AddControllers();
+// builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
+
 
 // Configure connection string for PostgreSQL
 builder.Services.AddDbContext<RecipesDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("postgres")));
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("postgres"),
+        b => b.MigrationsAssembly("RMA.ApiService")
+    ));
 
 // Add Redis for distributed caching
 builder.Services.AddStackExchangeRedisCache(options =>

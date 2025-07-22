@@ -1,4 +1,6 @@
-﻿namespace SDK.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace SDK.Models;
 
 public class Ingredient
 {
@@ -7,6 +9,8 @@ public class Ingredient
     public int Index { get; set; }
 
     public int RecipeId { get; set; }
+    
+    [JsonIgnore]
     public Recipe Recipe { get; set; } = default!;
 }
 

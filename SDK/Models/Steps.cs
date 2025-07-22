@@ -1,4 +1,6 @@
-﻿namespace SDK.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace SDK.Models;
 
 public class Step
 {
@@ -7,6 +9,8 @@ public class Step
     public int Index { get; set; }
 
     public int RecipeId { get; set; }
+    
+    [JsonIgnore]
     public Recipe Recipe { get; set; } = default!;
 }
 

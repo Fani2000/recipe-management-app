@@ -11,14 +11,12 @@ var postgres = builder.AddPostgres("postgres");
 // Only add pgAdmin in development environment
 if (builder.Environment.IsDevelopment())
 {
-    postgres.WithPgAdmin()
-        .AddDatabase("recipes");
+    postgres.WithPgAdmin();
 
     Console.WriteLine("pgAdmin added for development environment at port 5050");
 }
 else
 {
-    postgres.AddDatabase("recipes");
     Console.WriteLine("pgAdmin not added in production environment");
 }
 
