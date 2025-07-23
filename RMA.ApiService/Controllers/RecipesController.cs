@@ -94,6 +94,7 @@ namespace RMA.ApiService.Controllers
                 Title = recipe.Title,
                 Description = recipe.Description,
                 CookingTimeMinutes = recipe.CookingTimeMinutes,
+                Image = recipe.Image,
                 Ingredients = recipe.Ingredients.Select(i => new IngredientDto
                 {
                     Id = i.Id,
@@ -140,6 +141,7 @@ namespace RMA.ApiService.Controllers
                 Title = recipe.Title,
                 Description = recipe.Description,
                 CookingTimeMinutes = recipe.CookingTimeMinutes,
+                Image = recipe.Image,
                 Ingredients = recipe.Ingredients.Select(i => new IngredientDto
                 {
                     Id = i.Id,
@@ -174,6 +176,7 @@ namespace RMA.ApiService.Controllers
                 Title = recipeDto.Title,
                 Description = recipeDto.Description,
                 CookingTimeMinutes = recipeDto.CookingTimeMinutes,
+                Image = recipeDto.Image,
                 Ingredients = recipeDto.Ingredients.Select(i => new Ingredient
                 {
                     Content = i.Content,
@@ -237,6 +240,7 @@ namespace RMA.ApiService.Controllers
                 Id = existingRecipe.Id,
                 Title = existingRecipe.Title,
                 Description = existingRecipe.Description,
+                Image = existingRecipe.Image,
                 CookingTimeMinutes = existingRecipe.CookingTimeMinutes,
                 Tags = new List<Tag>(existingRecipe.Tags)
             };
@@ -244,6 +248,7 @@ namespace RMA.ApiService.Controllers
             // Update existing recipe
             existingRecipe.Title = recipeDto.Title;
             existingRecipe.Description = recipeDto.Description;
+            existingRecipe.Image = recipeDto.Image;
             existingRecipe.CookingTimeMinutes = recipeDto.CookingTimeMinutes;
 
             // Update ingredients
