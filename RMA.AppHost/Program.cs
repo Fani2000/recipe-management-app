@@ -21,11 +21,20 @@ else
 }
 
 // Add API service with dependencies
-var apiService = builder.AddProject<Projects.RMA_ApiService>("apiservice")
+var apiService = builder
+    .AddProject<Projects.RMA_ApiService>("apiservice")
     .WithReference(cache)
     .WithReference(postgres)
+    .WithEndpoint()
     .WaitFor(postgres)
     .WaitFor(cache);
+
+var frontend = builder.AddNpmApp("frontend", "../RMA.Frontend", "dev")
+    .WithReference(apiService)
+    .WithHttpEndpoint(5173, 5173, null, null, false)
+    .WithExternalHttpEndpoints()
+    .WaitFor(apiService);
+
 
 
 builder.Build().Run();

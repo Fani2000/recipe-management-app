@@ -15,4 +15,9 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  define: {
+    'process.env': {
+      BACKEND_URL: process.env.services__apiservice__http__0
+    }
+  }
 })

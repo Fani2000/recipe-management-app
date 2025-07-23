@@ -16,7 +16,7 @@ export const useRecipeStore = defineStore('recipes', () => {
 
   const filteredRecipes = computed(() => {
     const data = recipes.value.$values ?? []
-    return data.filter((r) => {
+    return data.filter((r: any) => {
       const matchesSearch = r.title.toLowerCase().includes(searchQuery.value.toLowerCase())
       const matchesTags =
         selectedTags.value.length === 0 ||
@@ -27,7 +27,9 @@ export const useRecipeStore = defineStore('recipes', () => {
 
   const allTags = computed(() => {
     const tagSet = new Set<string>()
-    recipes.value.forEach((r) => (r.tags?.$values || []).forEach((t: any) => tagSet.add(t.name)))
+    const data = recipes.value.$values ?? []
+    console.log('recipes', data)
+    data.forEach((r: any) => (r.tags?.$values || []).forEach((t: any) => tagSet.add(t.name)))
     return Array.from(tagSet).map((name) => ({ name }))
   })
 
@@ -35,6 +37,7 @@ export const useRecipeStore = defineStore('recipes', () => {
     loading.value = true
     const { data } = await getRecipes()
     recipes.value = data
+    console.log('Recipes fetched:', data)
     loading.value = false
   }
 
@@ -55,18 +58,22 @@ export const useRecipeStore = defineStore('recipes', () => {
 
   const addRecipe = async (recipe: any) => {
     const { data } = await createRecipe(recipe)
+    console.log('New recipe added:', data)
     recipes.value.push(data)
   }
 
   const modifyRecipe = async (id: number, recipe: any) => {
-    const { data } = await updateRecipe(id, recipe)
-    const index = recipes.value.findIndex((r) => r.id === id)
+    console.log('Updating recipe with ID:', id, 'Data:', recipe)
+    loading.value = true
+    const { data } = await updateRecipe(id, { ...recipe, id })
+    console.log(" recipes: ", recipes.value)
+    const index = recipes.value.$values.findIndex((r: any) => r.id === id)
     if (index !== -1) recipes.value[index] = data
   }
 
   const removeRecipe = async (id: number) => {
     await deleteRecipe(id)
-    recipes.value = recipes.value.filter((r) => r.id !== id)
+    recipes.value = recipes.value.$values.filter((r: any) => r.id !== id)
   }
 
   return {

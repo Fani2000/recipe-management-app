@@ -1,7 +1,9 @@
 // src/services/recipeService.ts
 import axios from 'axios'
 
-const API_URL = 'http://localhost:5450/api/Recipes'
+const backendUrl = import.meta.env.BACKEND_URL || process.env.BACKEND_URL || ''
+const API_URL = backendUrl + "/api/Recipes"
+console.log("API_URL: ",  API_URL)
 
 export const getRecipes = () => axios.get(API_URL)
 export const getRecipeById = (id: number) => axios.get(`${API_URL}/${id}`)

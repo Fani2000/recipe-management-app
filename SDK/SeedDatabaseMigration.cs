@@ -71,6 +71,7 @@ namespace SDK.Data
                     Description =
                         "A simple and delicious breakfast classic made with fluffy eggs. Ready in minutes and perfect for busy mornings.",
                     CookingTimeMinutes = 10,
+                    Image = "https://images.pexels.com/photos/33120628/pexels-photo-33120628.jpeg",
                     Ingredients = new List<Ingredient>
                     {
                         new Ingredient { Content = "4 eggs", Index = 0 },
@@ -97,6 +98,7 @@ namespace SDK.Data
                     Description =
                         "A classic Italian pasta dish with a creamy sauce made from eggs, cheese, pancetta, and black pepper. Rich, savory, and comforting.",
                     CookingTimeMinutes = 25,
+                    Image = "https://images.pexels.com/photos/12918198/pexels-photo-12918198.jpeg",
                     Ingredients = new List<Ingredient>
                     {
                         new Ingredient { Content = "400g spaghetti", Index = 0 },
@@ -133,6 +135,7 @@ namespace SDK.Data
                     Description =
                         "A colorful and healthy stir-fry loaded with fresh vegetables and a flavorful sauce. Customizable and perfect for using up produce in your fridge.",
                     CookingTimeMinutes = 20,
+                    Image = "https://images.pexels.com/photos/5848496/pexels-photo-5848496.jpeg",
                     Ingredients = new List<Ingredient>
                     {
                         new Ingredient { Content = "1 bell pepper, sliced", Index = 0 },
@@ -163,6 +166,7 @@ namespace SDK.Data
                     Description =
                         "Classic homemade cookies with the perfect balance of chewy centers and crisp edges. Packed with chocolate chips for a timeless dessert favorite.",
                     CookingTimeMinutes = 30,
+                    Image="https://images.pexels.com/photos/4110528/pexels-photo-4110528.jpeg",
                     Ingredients = new List<Ingredient>
                     {
                         new Ingredient { Content = "225g butter, softened", Index = 0 },
