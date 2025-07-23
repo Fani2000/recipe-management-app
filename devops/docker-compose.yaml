@@ -23,6 +23,20 @@ services:
     - "redis-server --requirepass $REDIS_PASSWORD"
     - "/bin/sh"
     restart: unless-stopped
+  postgres:
+    container_name: "postgres"
+    image: "docker.io/library/postgres:17.4"
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "YyhiMGrlOzbluFoyBfjnzZ"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_SERVICE_NAME: "postgres"
+    ports:
+    - target: 5432
+      published: 5432
+    restart: unless-stopped
   apiservice:
     container_name: "apiservice"
     image: "apiservice:latest"
@@ -32,6 +46,8 @@ services:
       OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY: "in_memory"
       ASPNETCORE_FORWARDEDHEADERS_ENABLED: "true"
       HTTP_PORTS: "8080"
+      ConnectionStrings__cache: "cache:6379,password=3TW5v!TvdlSppu8R1nNSnU"
+      ConnectionStrings__postgres: "Host=postgres;Port=5432;Username=postgres;Password=YyhiMGrlOzbluFoyBfjnzZ"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
       OTEL_SERVICE_NAME: "apiservice"
     ports:
@@ -39,4 +55,18 @@ services:
       published: 10000
     - target: 8443
       published: 10001
+    - target: 8000
+      published: 10002
+    restart: unless-stopped
+  frontend:
+    container_name: "frontend"
+    environment:
+      NODE_ENV: "development"
+      services__apiservice__http__0: "http://apiservice:8080"
+      services__apiservice__tcp__0: "apiservice:8000"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_SERVICE_NAME: "frontend"
+    ports:
+    - target: 5173
+      published: 5173
     restart: unless-stopped

@@ -3,33 +3,31 @@ kind: Deployment
 metadata:
   annotations: {}
   labels:
-    app: apiservice
-  name: apiservice
+    app: frontend
+  name: frontend
 spec:
   minReadySeconds: 60
   replicas: 1
   selector:
     matchLabels:
-      app: apiservice
+      app: frontend
   strategy:
     type: Recreate
   template:
     metadata:
       annotations: {}
       labels:
-        app: apiservice
+        app: frontend
     spec:
       containers:
       - args: []
         envFrom:
         - configMapRef:
-            name: apiservice
-        image: '{{ .Values.images.apiservice }}'
+            name: frontend
+        image: '{{ .Values.images.frontend }}'
         imagePullPolicy: IfNotPresent
-        name: apiservice
+        name: frontend
         ports:
-        - containerPort: 8080
+        - containerPort: 5173
           name: http
-        - containerPort: 8443
-          name: https
       terminationGracePeriodSeconds: 180

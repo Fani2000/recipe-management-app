@@ -1,4 +1,6 @@
 images:
   cache: docker.io/library/redis:7.4
+  postgres: docker.io/library/postgres:17.4
   apiservice: apiservice:latest
+  frontend: frontend:latest
   aspiredashboard: mcr.microsoft.com/dotnet/aspire-dashboard:9.0

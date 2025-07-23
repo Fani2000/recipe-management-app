@@ -33,7 +33,8 @@ var frontend = builder.AddNpmApp("frontend", "../RMA.Frontend", "dev")
     .WithReference(apiService)
     .WithHttpEndpoint(5173, 5173, null, null, false)
     .WithExternalHttpEndpoints()
-    .WaitFor(apiService);
+    .WaitFor(apiService)
+    .PublishAsDockerFile();
 
 
 
