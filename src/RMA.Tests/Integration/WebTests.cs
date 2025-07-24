@@ -2,6 +2,8 @@ namespace RMA.Tests;
 
 public class WebTests
 {
+ 
+    
     [Fact]
     public async Task GetWebResourceRootReturnsOkStatusCode()
     {
@@ -18,9 +20,9 @@ public class WebTests
         await app.StartAsync();
 
         // Act
-        var httpClient = app.CreateHttpClient("webfrontend");
-        await resourceNotificationService.WaitForResourceAsync("webfrontend", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(30));
-        var response = await httpClient.GetAsync("/");
+        var httpClient = app.CreateHttpClient("apiservice");
+        await resourceNotificationService.WaitForResourceAsync("apiservice", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(30));
+        var response = await httpClient.GetAsync("/api/Recipes");
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);

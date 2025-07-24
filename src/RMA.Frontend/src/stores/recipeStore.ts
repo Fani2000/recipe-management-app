@@ -15,9 +15,10 @@ export const useRecipeStore = defineStore('recipes', () => {
   const loading = ref(false)
 
   const filteredRecipes = computed(() => {
-    const data = recipes.value.$values ?? []
+    const data = recipes.value ?? []
     return data.filter((r: any) => {
-      const matchesSearch = r.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+      // console.log("Filteted recipes: ", r.title, "Search: ", searchQuery.value, "Tags: ", selectedTags.value, "")
+      const matchesSearch = r.title?.toLowerCase().includes(searchQuery.value.toLowerCase())
       const matchesTags =
         selectedTags.value.length === 0 ||
         (r.tags?.$values || []).some((tag: any) => selectedTags.value.includes(tag.name))
@@ -27,8 +28,8 @@ export const useRecipeStore = defineStore('recipes', () => {
 
   const allTags = computed(() => {
     const tagSet = new Set<string>()
-    const data = recipes.value.$values ?? []
-    console.log('recipes', data)
+    const data = recipes.value ?? []
+    // console.log('recipes', data)
     data.forEach((r: any) => (r.tags?.$values || []).forEach((t: any) => tagSet.add(t.name)))
     return Array.from(tagSet).map((name) => ({ name }))
   })
@@ -36,8 +37,8 @@ export const useRecipeStore = defineStore('recipes', () => {
   const fetchRecipes = async () => {
     loading.value = true
     const { data } = await getRecipes()
-    recipes.value = data
-    console.log('Recipes fetched:', data)
+    recipes.value = data.$values
+    // console.log('Recipes fetched:', data, " Recipes: ", recipes.value)
     loading.value = false
   }
 
@@ -51,29 +52,30 @@ export const useRecipeStore = defineStore('recipes', () => {
   const getRecipeById: any = async (id: number) => {
     loading.value = true
     const { data } = await getRecipe(id)
-    console.log('Recipe fetched:', data)
+    // console.log('Recipe fetched:', data)
     loading.value = false
     return data
   }
 
   const addRecipe = async (recipe: any) => {
     const { data } = await createRecipe(recipe)
-    console.log('New recipe added:', data)
+    // console.log('New recipe added:', data, "Recipes ",recipes.value)
     recipes.value.push(data)
   }
 
   const modifyRecipe = async (id: number, recipe: any) => {
-    console.log('Updating recipe with ID:', id, 'Data:', recipe)
+    // console.log('Updating recipe with ID:', id, 'Data:', recipe)
     loading.value = true
     const { data } = await updateRecipe(id, { ...recipe, id })
-    console.log(" recipes: ", recipes.value)
-    const index = recipes.value.$values.findIndex((r: any) => r.id === id)
+    // console.log(" recipes: ", recipes.value)
+    const index = recipes.value.findIndex((r: any) => r.id === id)
     if (index !== -1) recipes.value[index] = data
   }
 
   const removeRecipe = async (id: number) => {
     await deleteRecipe(id)
-    recipes.value = recipes.value.$values.filter((r: any) => r.id !== id)
+    // console.log(recipes.value)
+    recipes.value = recipes.value.filter((r: any) => r.id !== id)
   }
 
   return {

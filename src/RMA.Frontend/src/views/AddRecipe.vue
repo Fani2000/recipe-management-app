@@ -1,6 +1,6 @@
 <template>
   <v-container class="py-6" fluid style="background-color: #fffaf4;height: 100vh;display: flex; align-items: center;" >
-    <v-card class="pa-6 mx-auto" max-width="800" elevation="6" rounded="xl" style="background-color: #fffbe6;">
+    <v-card class="pa-6 mx-auto" width="800" elevation="6" rounded="xl" style="background-color: #fffbe6;">
       <v-card-title class="text-h4 font-weight-bold mb-4">
         {{ editMode ? '✏️ Edit Recipe' : '🍳 Add New Recipe' }}
       </v-card-title>
@@ -13,7 +13,7 @@
         <v-tab>Review</v-tab>
       </v-tabs>
 
-      <v-window v-model="tab">
+      <v-window v-model="tab" style="height: 60vh; width: 100%;overflow-y: auto;">
         <v-window-item :value="0">
           <v-card-text>
             <v-text-field v-model="title" label="Title" outlined dense required class="mb-3" />
