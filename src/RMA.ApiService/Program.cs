@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using SDK.Data;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using RMA.ApiService.Services;
 using SDK.RecipesContext;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddScoped<RecipeService>();
 
 // Configure connection string for PostgreSQL
 builder.Services.AddDbContext<RecipesDbContext>(options =>
