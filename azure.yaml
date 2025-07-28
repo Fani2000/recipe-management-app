@@ -6,3 +6,4 @@ services:
     language: dotnet
     project: ./src/RMA.AppHost/RMA.AppHost.csproj
     host: containerapp
+    

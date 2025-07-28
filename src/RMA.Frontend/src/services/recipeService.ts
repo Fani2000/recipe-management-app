@@ -1,8 +1,7 @@
 // src/services/recipeService.ts
 import axios from 'axios'
 
-const backendUrl = import.meta.env.BACKEND_URL || process.env.BACKEND_URL || ''
-console.log("process", import.meta.env, " Other: ", process.env)
+const backendUrl = import.meta.env.BACKEND_URL || process.env.BACKEND_URL || 'https://apiservice.wonderfulrock-4e9ab187.eastus2.azurecontainerapps.io/api/Recipes'
 const API_URL = backendUrl + "/api/Recipes"
 console.log("API_URL: ",  API_URL)
 
