@@ -28,14 +28,16 @@ var apiService = builder
     .WaitFor(postgres)
     .WaitFor(cache);
 
-var frontend = builder.AddNpmApp("frontend", "../RMA.Frontend", "dev")
-    .WithReference(apiService)
-    .WithHttpEndpoint(port: 5173, isProxied: false)
-    .WithEnvironment("BACKEND_URL", apiService.GetEndpoint("http"))
-    .WithExternalHttpEndpoints()
-    .WaitFor(apiService)
-    .PublishAsDockerFile();
 
-
+if (builder.Environment.IsDevelopment())
+{
+    builder.AddNpmApp("frontend", "../RMA.Frontend", "dev")
+        .WithReference(apiService)
+        .WithHttpEndpoint(port: 5173, isProxied: false)
+        .WithEnvironment("BACKEND_URL", apiService.GetEndpoint("http"))
+        .WithExternalHttpEndpoints()
+        .WaitFor(apiService)
+        .PublishAsDockerFile();
+}
 
 builder.Build().Run();
