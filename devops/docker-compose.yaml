@@ -10,18 +10,16 @@ services:
     restart: unless-stopped
   cache:
     container_name: "cache"
-    image: "docker.io/library/redis:7.4"
+    image: "redis:7.2"
+    ports:
+      - "6379:6379"
+    command: >
+      redis-server
+      --requirepass 3TW5v!TvdlSppu8R1nNSnU
     environment:
       REDIS_PASSWORD: "3TW5v!TvdlSppu8R1nNSnU"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
       OTEL_SERVICE_NAME: "cache"
-    ports:
-    - target: 6379
-      published: 6379
-    command:
-    - "-c"
-    - "redis-server --requirepass $REDIS_PASSWORD"
-    - "/bin/sh"
     restart: unless-stopped
   postgres:
     container_name: "postgres"
@@ -60,10 +58,12 @@ services:
     restart: unless-stopped
   frontend:
     container_name: "frontend"
+    image: "frontend:latest"
     environment:
       NODE_ENV: "development"
       services__apiservice__http__0: "http://apiservice:8080"
       services__apiservice__tcp__0: "apiservice:8000"
+      BACKEND_URL: "http://apiservice:8080"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
       OTEL_SERVICE_NAME: "frontend"
     ports:
