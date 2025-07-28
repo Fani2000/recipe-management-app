@@ -41,18 +41,19 @@ A modern, full-stack recipe management system built with Vue 3 + Vuetify and ASP
 
 ```bash
 # Clone
-git clone https://github.com/your-org/rma.git
+git clone https://github.com/Fani2000/recipe-management-app.git
 cd rma
 
+cd src/
+
 # Frontend setup
-cd frontend
+cd RMA.Frontend/
 npm install
-npm run dev
 
 # Backend setup
-cd ../backend
+cd ../RMA.AppHost
 dotnet restore
-DOTNET_ENVIRONMENT=Development dotnet run
+DOTNET_ENVIRONMENT=Development && dotnet run
 ```
 
 ---

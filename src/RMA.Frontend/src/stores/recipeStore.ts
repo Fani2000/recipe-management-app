@@ -46,7 +46,7 @@ export const useRecipeStore = defineStore('recipes', () => {
   const setSearch = (query: string) => {
     searchQuery.value = query
     console.log("Search: ", searchQuery.value)
-    searchRecipes()
+    search()
   }
   const setTags = (tags: string[]) => {
     selectedTags.value = tags

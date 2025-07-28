@@ -12,7 +12,6 @@ var postgres = builder.AddPostgres("postgres");
 if (builder.Environment.IsDevelopment())
 {
     postgres.WithPgAdmin();
-
     Console.WriteLine("pgAdmin added for development environment at port 5050");
 }
 else
@@ -25,16 +24,16 @@ var apiService = builder
     .AddProject<Projects.RMA_ApiService>("apiservice")
     .WithReference(cache)
     .WithReference(postgres)
-    .WithEndpoint()
+    .WithExternalHttpEndpoints() 
     .WaitFor(postgres)
     .WaitFor(cache);
 
 var frontend = builder.AddNpmApp("frontend", "../RMA.Frontend", "dev")
     .WithReference(apiService)
-    .WithHttpEndpoint(5173, 5173, null, null, false)
-    // .With("services__apiservice__http__0", "http://localhost:5450")
-    .WithExternalHttpEndpoints()
+    .WithHttpEndpoint(port: 5173, isProxied: false) 
+    .WithExternalHttpEndpoints() 
     .WaitFor(apiService)
-    .PublishAsDockerFile();
+    .PublishAsDockerFile();;
+
 
 builder.Build().Run();

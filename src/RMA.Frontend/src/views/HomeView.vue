@@ -77,14 +77,11 @@ const router = useRouter()
 
 onMounted(() => fetchRecipes())
 
-// watch(search, (val) => store.setSearch(val))
-// watch(selectedTags, (val) => store.setTags(val))
-
 const goToRecipe = async (id: number) => {
   selectedRecipe.value = await store.getRecipeById(Number(id))
 }
 
-watch(search, (val) => setSearch(val) )
+watch(search, (val: any) => setSearch(val))
 
 const goToAddRecipe = () => router.push('/add-recipe')
 
