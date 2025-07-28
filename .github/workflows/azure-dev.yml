@@ -35,29 +35,29 @@ jobs:
 
       # Check if tools are already installed (common on self-hosted runners)
       - name: Check existing installations
-        shell: pwsh
+        shell: bash
         run: |
-          Write-Host "Checking existing installations..."
+          echo "Checking existing installations..."
           
           # Check .NET
-          try {
-            $dotnetVersion = dotnet --version 2>$null
-            Write-Host "✅ .NET already installed: $dotnetVersion"
-            echo "DOTNET_INSTALLED=true" >> $env:GITHUB_ENV
-          } catch {
-            Write-Host "❌ .NET not found"
-            echo "DOTNET_INSTALLED=false" >> $env:GITHUB_ENV
-          }
+          if command -v dotnet &> /dev/null; then
+            dotnetVersion=$(dotnet --version 2>/dev/null || echo "unknown")
+            echo "✅ .NET already installed: $dotnetVersion"
+            echo "DOTNET_INSTALLED=true" >> $GITHUB_ENV
+          else
+            echo "❌ .NET not found"
+            echo "DOTNET_INSTALLED=false" >> $GITHUB_ENV
+          fi
           
           # Check azd
-          try {
-            $azdVersion = azd version 2>$null
-            Write-Host "✅ azd already installed: $azdVersion"
-            echo "AZD_INSTALLED=true" >> $env:GITHUB_ENV
-          } catch {
-            Write-Host "❌ azd not found"
-            echo "AZD_INSTALLED=false" >> $env:GITHUB_ENV
-          }
+          if command -v azd &> /dev/null; then
+            azdVersion=$(azd version 2>/dev/null || echo "unknown")
+            echo "✅ azd already installed: $azdVersion"
+            echo "AZD_INSTALLED=true" >> $GITHUB_ENV
+          else
+            echo "❌ azd not found"
+            echo "AZD_INSTALLED=false" >> $GITHUB_ENV
+          fi
 
       - name: Setup .NET
         if: env.DOTNET_INSTALLED == 'false'
@@ -73,26 +73,23 @@ jobs:
 
       # Install/Update .NET Aspire workload (always run to ensure latest)
       - name: Install .NET Aspire workload
-        shell: pwsh
+        shell: bash
         run: |
-          Write-Host "Installing/Updating .NET Aspire workload..."
+          echo "Installing/Updating .NET Aspire workload..."
           dotnet workload install aspire --skip-sign-check
           dotnet workload list
 
       # Clean previous builds (important for self-hosted runners)
       - name: Clean previous builds
-        shell: pwsh
+        shell: bash
         run: |
-          Write-Host "Cleaning previous builds..."
-          if (Test-Path "./src") {
-            Get-ChildItem -Path "./src" -Recurse -Directory -Name "bin", "obj" | ForEach-Object {
-              $fullPath = Join-Path $_ $_.Name
-              if (Test-Path $fullPath) {
-                Write-Host "Removing: $fullPath"
-                Remove-Item $fullPath -Recurse -Force -ErrorAction SilentlyContinue
-              }
-            }
-          }
+          echo "Cleaning previous builds..."
+          
+          # Find and remove bin/obj directories
+          if [ -d "./src" ]; then
+            find ./src -type d \( -name "bin" -o -name "obj" \) -exec rm -rf {} + 2>/dev/null || true
+            echo "Removed bin/obj directories"
+          fi
           
           # Clean NuGet cache if needed
           dotnet nuget locals all --clear
@@ -106,22 +103,22 @@ jobs:
 
       # Login to Azure
       - name: Log in with Azure (Federated Credentials)
-        shell: pwsh
+        shell: bash
         run: |
-          Write-Host "Logging in to Azure..."
-          azd auth login `
-            --client-id "$Env:AZURE_CLIENT_ID" `
-            --federated-credential-provider "github" `
-            --tenant-id "$Env:AZURE_TENANT_ID"
+          echo "Logging in to Azure..."
+          azd auth login \
+            --client-id "$AZURE_CLIENT_ID" \
+            --federated-credential-provider "github" \
+            --tenant-id "$AZURE_TENANT_ID"
           
           # Verify login
           azd auth login --check
 
       # Provision infrastructure
       - name: Provision Infrastructure
-        shell: pwsh
+        shell: bash
         run: |
-          Write-Host "Provisioning Azure infrastructure..."
+          echo "Provisioning Azure infrastructure..."
           azd provision --no-prompt
         env:
           AZURE_POSTGRES_PASSWORD: ${{ secrets.AZURE_POSTGRES_PASSWORD }}
@@ -129,9 +126,9 @@ jobs:
 
       # Deploy application
       - name: Deploy Application
-        shell: pwsh
+        shell: bash
         run: |
-          Write-Host "Deploying application..."
+          echo "Deploying application..."
           azd deploy --no-prompt
         env:
           AZURE_POSTGRES_PASSWORD: ${{ secrets.AZURE_POSTGRES_PASSWORD }}
@@ -140,19 +137,19 @@ jobs:
       # Cleanup (important for self-hosted runners to prevent state issues)
       - name: Cleanup
         if: always()
-        shell: pwsh
+        shell: bash
         run: |
-          Write-Host "Performing cleanup..."
+          echo "Performing cleanup..."
           
           # Stop any running dotnet processes
-          Get-Process -Name "dotnet" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+          pkill -f dotnet || true
           
           # Clean Docker containers and images if Docker is available
-          try {
-            docker system prune -f --volumes 2>$null
-            Write-Host "✅ Docker cleanup completed"
-          } catch {
-            Write-Host "ℹ️ Docker not available or cleanup not needed"
-          }
+          if command -v docker &> /dev/null; then
+            docker system prune -f --volumes 2>/dev/null || true
+            echo "✅ Docker cleanup completed"
+          else
+            echo "ℹ️ Docker not available or cleanup not needed"
+          fi
           
-          Write-Host "Cleanup completed"
+          echo "Cleanup completed"
