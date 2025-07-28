@@ -30,10 +30,12 @@ var apiService = builder
 
 var frontend = builder.AddNpmApp("frontend", "../RMA.Frontend", "dev")
     .WithReference(apiService)
-    .WithHttpEndpoint(port: 5173, isProxied: false) 
-    .WithExternalHttpEndpoints() 
+    .WithHttpEndpoint(port: 5173, isProxied: false)
+    .WithEnvironment("BACKEND_URL", apiService.GetEndpoint("http"))
+    .WithExternalHttpEndpoints()
     .WaitFor(apiService)
-    .PublishAsDockerFile();;
+    .PublishAsDockerFile();
+
 
 
 builder.Build().Run();

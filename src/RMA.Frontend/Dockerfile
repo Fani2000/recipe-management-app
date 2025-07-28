@@ -34,7 +34,9 @@ RUN rm -rf /etc/nginx/conf.d/default.conf
 
 # Copy built files to Nginx root directory
 COPY --from=build /app/dist /usr/share/nginx/html
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy nginx configuration template
+COPY nginx.conf.template /etc/nginx/conf.d/default.conf.template
 
 # Copy config template
 COPY --from=build /app/dist/config.template.js /usr/share/nginx/html/config.template.js
@@ -52,5 +54,5 @@ RUN chmod +x /docker-entrypoint.sh && \
 # Expose port
 EXPOSE 80
 
-# Use the entrypoint script with shell
-ENTRYPOINT ["/bin/sh", "/docker-entrypoint.sh"]
+# Use the entrypoint script
+ENTRYPOINT ["/docker-entrypoint.sh"]
