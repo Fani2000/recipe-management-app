@@ -62,11 +62,11 @@ public class WebTests
         var postResponse = await httpClient.PostAsJsonAsync("/api/Recipes", newRecipe);
         postResponse.EnsureSuccessStatusCode();
 
-        var createdId = await TestUtils.GetJsonStringPropertyAsync(postResponse, "id");
-        var title = await TestUtils.GetJsonStringPropertyAsync(postResponse, "title");
+        var createdId = await TestUtils.GetJsonPropertyAsync<int>(postResponse, "id");
+        var title = await TestUtils.GetJsonPropertyAsync<string>(postResponse, "title");
 
         Assert.Equal("Benchmark Pasta", title);
-        Assert.False(string.IsNullOrWhiteSpace(createdId));
+        Assert.False(string.IsNullOrEmpty(createdId.ToString()));
         _testOutputHelper.WriteLine($"✅ Created recipe with ID: {createdId}");
 
         var getResponse = await httpClient.GetAsync($"/api/Recipes/{createdId}");

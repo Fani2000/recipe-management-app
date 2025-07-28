@@ -17,7 +17,7 @@ export default defineConfig({
   },
   define: {
     'process.env': {
-      BACKEND_URL: process.env.services__apiservice__http__0
+      BACKEND_URL: process.env.services__apiservice__http__0,
     }
   }
 })

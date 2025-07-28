@@ -6,6 +6,7 @@ import {
   createRecipe,
   updateRecipe,
   deleteRecipe,
+  searchRecipes,
 } from '@/services/recipeService'
 
 export const useRecipeStore = defineStore('recipes', () => {
@@ -44,9 +45,19 @@ export const useRecipeStore = defineStore('recipes', () => {
 
   const setSearch = (query: string) => {
     searchQuery.value = query
+    console.log("Search: ", searchQuery.value)
+    searchRecipes()
   }
   const setTags = (tags: string[]) => {
     selectedTags.value = tags
+  }
+
+  const search = async () => {
+    loading.value = true
+    const { data } = await searchRecipes(searchQuery.value, selectedTags.value)
+    recipes.value = data.$values
+    // console.log('Recipes fetched:', data, " Recipes: ", recipes.value)
+    loading.value = false
   }
 
   const getRecipeById: any = async (id: number) => {

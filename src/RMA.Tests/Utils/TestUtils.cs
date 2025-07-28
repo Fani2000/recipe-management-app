@@ -4,19 +4,32 @@ namespace RMA.Tests.Utils;
 
 public static class TestUtils
 {
-    
-    public static async Task<string?> GetJsonStringPropertyAsync(HttpResponseMessage response, string propertyName)
+
+    public static async Task<T?> GetJsonPropertyAsync<T>(HttpResponseMessage response, string propertyName)
     {
         if (response.Content == null)
-            return null;
+            return default;
 
         var raw = await response.Content.ReadAsStringAsync();
+
         using var json = JsonDocument.Parse(raw);
 
-        return json.RootElement.TryGetProperty(propertyName, out var value)
-            ? value.GetString()
-            : null;
+        if (json.RootElement.TryGetProperty(propertyName, out var value))
+        {
+            try
+            {
+                return JsonSerializer.Deserialize<T>(value.GetRawText());
+            }
+            catch
+            {
+                return default;
+            }
+        }
+
+        return default;
     }
+
+
 
     public static async Task<List<T>> GetJsonArrayAsync<T>(HttpResponseMessage response, string propertyName)
     {
