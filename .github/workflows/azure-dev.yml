@@ -13,46 +13,146 @@ permissions:
   id-token: write
   contents: read
 
-
 jobs:
   build:
     runs-on: self-hosted
+    timeout-minutes: 30  # Prevent hanging jobs on self-hosted runners
     env:
       AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
       AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
       AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+      # Ensure clean environment for self-hosted runners
+      DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+      
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install azd
-        uses: Azure/setup-azd@v2
+        with:
+          clean: true  # Ensure clean checkout on self-hosted runners
+
+      # Check if tools are already installed (common on self-hosted runners)
+      - name: Check existing installations
+        shell: pwsh
+        run: |
+          Write-Host "Checking existing installations..."
+          
+          # Check .NET
+          try {
+            $dotnetVersion = dotnet --version 2>$null
+            Write-Host "✅ .NET already installed: $dotnetVersion"
+            echo "DOTNET_INSTALLED=true" >> $env:GITHUB_ENV
+          } catch {
+            Write-Host "❌ .NET not found"
+            echo "DOTNET_INSTALLED=false" >> $env:GITHUB_ENV
+          }
+          
+          # Check azd
+          try {
+            $azdVersion = azd version 2>$null
+            Write-Host "✅ azd already installed: $azdVersion"
+            echo "AZD_INSTALLED=true" >> $env:GITHUB_ENV
+          } catch {
+            Write-Host "❌ azd not found"
+            echo "AZD_INSTALLED=false" >> $env:GITHUB_ENV
+          }
+
       - name: Setup .NET
+        if: env.DOTNET_INSTALLED == 'false'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: | 
             8.x.x
             9.x.x
 
-      - name: Log in with Azure (Federated Credentials)
+      - name: Install azd
+        if: env.AZD_INSTALLED == 'false'
+        uses: Azure/setup-azd@v2
+
+      # Install/Update .NET Aspire workload (always run to ensure latest)
+      - name: Install .NET Aspire workload
+        shell: pwsh
         run: |
+          Write-Host "Installing/Updating .NET Aspire workload..."
+          dotnet workload install aspire --skip-sign-check
+          dotnet workload list
+
+      # Clean previous builds (important for self-hosted runners)
+      - name: Clean previous builds
+        shell: pwsh
+        run: |
+          Write-Host "Cleaning previous builds..."
+          if (Test-Path "./src") {
+            Get-ChildItem -Path "./src" -Recurse -Directory -Name "bin", "obj" | ForEach-Object {
+              $fullPath = Join-Path $_ $_.Name
+              if (Test-Path $fullPath) {
+                Write-Host "Removing: $fullPath"
+                Remove-Item $fullPath -Recurse -Force -ErrorAction SilentlyContinue
+              }
+            }
+          }
+          
+          # Clean NuGet cache if needed
+          dotnet nuget locals all --clear
+
+      # Restore and build to catch issues early
+      - name: Restore dependencies
+        run: dotnet restore --verbosity normal
+
+      - name: Build solution
+        run: dotnet build --no-restore --configuration Release --verbosity normal
+
+      # Login to Azure
+      - name: Log in with Azure (Federated Credentials)
+        shell: pwsh
+        run: |
+          Write-Host "Logging in to Azure..."
           azd auth login `
             --client-id "$Env:AZURE_CLIENT_ID" `
             --federated-credential-provider "github" `
             --tenant-id "$Env:AZURE_TENANT_ID"
-        shell: pwsh
+          
+          # Verify login
+          azd auth login --check
 
-
+      # Provision infrastructure
       - name: Provision Infrastructure
-        run: azd provision --no-prompt
+        shell: pwsh
+        run: |
+          Write-Host "Provisioning Azure infrastructure..."
+          azd provision --no-prompt
         env:
           AZURE_POSTGRES_PASSWORD: ${{ secrets.AZURE_POSTGRES_PASSWORD }}
           AZURE_CACHE_PASSWORD: ${{ secrets.AZURE_CACHE_PASSWORD }}
 
+      # Deploy application
       - name: Deploy Application
-        run: azd deploy --no-prompt
+        shell: pwsh
+        run: |
+          Write-Host "Deploying application..."
+          azd deploy --no-prompt
         env:
           AZURE_POSTGRES_PASSWORD: ${{ secrets.AZURE_POSTGRES_PASSWORD }}
           AZURE_CACHE_PASSWORD: ${{ secrets.AZURE_CACHE_PASSWORD }}
-        
+
+      # Cleanup (important for self-hosted runners to prevent state issues)
+      - name: Cleanup
+        if: always()
+        shell: pwsh
+        run: |
+          Write-Host "Performing cleanup..."
+          
+          # Stop any running dotnet processes
+          Get-Process -Name "dotnet" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+          
+          # Clean Docker containers and images if Docker is available
+          try {
+            docker system prune -f --volumes 2>$null
+            Write-Host "✅ Docker cleanup completed"
+          } catch {
+            Write-Host "ℹ️ Docker not available or cleanup not needed"
+          }
+          
+          Write-Host "Cleanup completed"
