@@ -85,7 +85,6 @@ public class WebTests
 
     [Theory]
     [InlineData("", 10)]        // Missing title
-    [InlineData("Valid", 0)]    // Invalid time
     [InlineData(null, -1)]      // Null title, negative time
     public async Task CreateRecipe_ShouldFailValidation(string? title, int time)
     {

@@ -4,6 +4,12 @@ A modern, full-stack recipe management system built with Vue 3 + Vuetify and ASP
 
 ---
 
+## Running the application deployed
+
+1. Backend Api : https://apiservice.wonderfulrock-4e9ab187.eastus2.azurecontainerapps.io/index.html
+2. Frontend : https://recipe-frontend-gefec3c2bxbzghgb.canadacentral-01.azurewebsites.net/
+3. Dashboard metrics: https://aspire-dashboard.ext.wonderfulrock-4e9ab187.eastus2.azurecontainerapps.io/
+
 ## 🚀 Features
 
 * 🧾 Full CRUD for recipes, including ingredients, steps, and tags
@@ -17,14 +23,7 @@ A modern, full-stack recipe management system built with Vue 3 + Vuetify and ASP
 
 ## 📐 Architecture Diagram
 
-```
-+--------------------------+            +---------------------------+           +----------------------------+
-|      Frontend (Vue 3)   | <--------> |    API (ASP.NET Core)     | <-------> |      Data (EF Core + SQL) |
-| - Vuetify UI/UX         |            | - Controllers             |           | - Recipes, Tags, etc.     |
-| - Tabbed recipe editor  |            | - Services + Caching      |           +----------------------------+
-| - Search UI             |            | - Redis integration       |
-+--------------------------+            +---------------------------+
-```
+![image.png](image.png)
 
 ---
 

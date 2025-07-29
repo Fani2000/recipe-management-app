@@ -50,11 +50,11 @@ services:
       OTEL_SERVICE_NAME: "apiservice"
     ports:
     - target: 8080
-      published: 10000
+      published: 8080
     - target: 8443
-      published: 10001
+      published: 8443
     - target: 8000
-      published: 10002
+      published: 8000
     restart: unless-stopped
   frontend:
     container_name: "frontend"
@@ -67,6 +67,6 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
       OTEL_SERVICE_NAME: "frontend"
     ports:
-    - target: 5173
+    - target: 80
       published: 5173
     restart: unless-stopped
