@@ -15,8 +15,6 @@ public class RecipeDto
     [StringLength(1000, ErrorMessage = "Description can't be longer than 1000 characters.")]
     public string Description { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Image URL is required.")]
-    [Url(ErrorMessage = "Image must be a valid URL.")]
     public string Image { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Cooking time is required.")]

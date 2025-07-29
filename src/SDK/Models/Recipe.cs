@@ -16,7 +16,6 @@ public class Recipe
     public string Description { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Image URL is required.")]
-    [Url(ErrorMessage = "Image must be a valid URL.")]
     public string Image { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Cooking time is required.")]

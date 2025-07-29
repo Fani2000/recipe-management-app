@@ -23,10 +23,15 @@ A modern, full-stack recipe management system built with Vue 3 + Vuetify and ASP
 
 ## 📐 Architecture Diagram
 
-![image.png](image.png)
+![Overview architecture](overview.png)
 
 ---
 
+## 📐 UML Diagram for Backend Entities
+
+![UML Diagram](uml.png)
+
+---
 ## 🛠 Setup Instructions
 
 ### 📦 Prerequisites
