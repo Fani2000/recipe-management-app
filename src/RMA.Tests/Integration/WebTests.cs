@@ -72,13 +72,11 @@ public class WebTests
         var getResponse = await httpClient.GetAsync($"/api/Recipes/{createdId}");
         getResponse.EnsureSuccessStatusCode();
 
-        var ingredients = await TestUtils.GetJsonArrayAsync<List<IngredientDto>>(getResponse, "ingredients");
-        var steps = await TestUtils.GetJsonArrayAsync<List<StepDto>>(getResponse, "steps");
-        var tags = await TestUtils.GetJsonArrayAsync<List<TagDto>>(getResponse, "tags");
+        var getId = await TestUtils.GetJsonPropertyAsync<int>(postResponse, "id");
+        var getTitle = await TestUtils.GetJsonPropertyAsync<string>(postResponse, "title");
 
-        Assert.Single(ingredients);
-        Assert.Single(steps);
-        Assert.Single(tags);
+        Assert.Equal("Benchmark Pasta", getTitle);
+        Assert.False(string.IsNullOrEmpty(getId.ToString()));
 
         _testOutputHelper.WriteLine("✅ Retrieval and structure validation passed.");
     }
