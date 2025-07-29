@@ -1,3 +1,4 @@
+
 # Recipe Management App (RMA)
 
 A modern, full-stack recipe management system built with Vue 3 + Vuetify and ASP.NET Core. Supports creating, editing, searching, and benchmarking recipe data with Redis caching and SQL persistence.
@@ -114,7 +115,7 @@ All validated via `[Required]`, `[Range]`, `[StringLength]` attributes in the mo
 Run tests:
 
 ```bash
-cd backend/tests
+cd RMA.Tests
 dotnet test
 ```
 
@@ -131,3 +132,12 @@ dotnet test
 ## 📄 License
 
 MIT or your preferred open license
+
+Videos: 
+
+1. [Introductions: Link To introduction](https://www.loom.com/share/6813359e6b4e4019941ef2fd5c504ba1?sid=454615d9-af50-4f2f-91ad-7e8146f6434)
+
+2. Deep Dive
+<div style="height: 400px;500px;">
+  <video src="./second.mp4" style="height: 100%;width:100%;" controls />
+</div>
